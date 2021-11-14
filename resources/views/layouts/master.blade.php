@@ -33,9 +33,9 @@
     </main>
 
     <footer>
-        <div class="container mx-auto p-4">
+        <header class="container bg-gray-700 mx-auto p-4 z-50">
             <p>&copy; Chris Pratt | Weather Lord</p>
-        </div>
+        </header>
     </footer>
 
 

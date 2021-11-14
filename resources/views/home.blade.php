@@ -19,7 +19,7 @@
                                                         <div class="font-semibold text-center ">{{$currentWeather['current']['weather'][0]['description']}}</div>
                                                 </header>
                                         </header>
-                                        <div class="text-gray-400 text-center">Detroit, Michigan</div> 
+                                        <div class="text-gray-400 text-center">{{$city2}}</div> 
                                 </div>
                         </section>
                         @foreach ($currentWeather['daily'] as $weather)
@@ -33,8 +33,8 @@
                                                 @endif
                                                 <img class="text-center -my-5 " src="http://openweathermap.org/img/wn/{{$weather['weather'][0]['icon']}}@2x.png">
                                                 <p class="text-center">{{$weather['weather'][0]['description']}}</p>
-                                                <p class="text-center text-red-500">{{$weather['temp']['max']}} &#176;F</p>
-                                                <p class="text-center text-blue-500">{{$weather['temp']['min']}} &#176;F</p>
+                                                <p class="text-center text-red-500">{{round($weather['temp']['max'])}} &#176;F</p>
+                                                <p class="text-center text-blue-500">{{round($weather['temp']['min'])}} &#176;F</p>
                                         </header>
                                 </section>
                         @endforeach
