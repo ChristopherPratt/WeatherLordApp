@@ -12,7 +12,7 @@ class HomeController extends Controller
     {
         $response = (new WeatherController)->getWeather('Detroit');
 
-        dump($response->json());
+        //dump($response->json());
 
         return view('home', 
         ['title' => 'Home Page'],
