@@ -2,10 +2,18 @@
 @extends('layouts.master')
 
 @section('content')
-<article class="bg-gradient-to-t from-gray-500 to-gray-800 min-h-screen ">
+<article class="bg-gradient-to-t from-gray-500 to-gray-800 min-h-screen  ">
 
-        <div class="py-32 flex items-center">
-                <div class="w-128 mx-auto bg-gray-900 text-white text-sm rounded-lg overflow-hidden flex items-center">                  
+        <section class="flex ">
+                <header>
+
+                </header>
+                <input type="text">
+                
+        </section>
+
+        <section class="overflow-x-auto pt-32 mx-2 text-center">
+                <div class="w-max m-auto bg-gray-900 text-white text-sm rounded-lg  flex ">                  
                         <section class="current-weather flex items-center justify-between pl-4">
                                 <div>
                                         <div class=" font-semibold text-center">Current Weather</div>
@@ -39,6 +47,7 @@
                                 </section>
                         @endforeach
                 </div>
-        </div>
+        </section>
+
 </article>
 @endsection

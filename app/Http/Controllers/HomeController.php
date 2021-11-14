@@ -44,8 +44,8 @@ class HomeController extends Controller
         {
             $city = $currentUserInfo->cityName;
         }
-        $response = (new WeatherController)->getWeather( $city);
-
+        //$response = (new WeatherController)->getWeather( $city);
+        $response = (new WeatherController)->getCurrentWeather();
         //dump($response->json());
         //dump($city);
 
