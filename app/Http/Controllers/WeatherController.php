@@ -52,10 +52,6 @@ class WeatherController extends Controller
         }
         $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['features'][0]['center'][1]}&lon={$loc['features'][0]['center'][0]}&exclude={part}&appid={$apikey}&units=imperial");
         $city = explode(",",$loc['features'][0]['place_name']);
-        //dd($loc->json());
-        //dd($response->json());
-        //dd($req->input());
-        //dd($city);
         if (Count($city) >= 2)
         {
             $name = $city[0] . ',' . $city[1];
@@ -63,10 +59,36 @@ class WeatherController extends Controller
         else{
             $name = $city[0];
         }
-        
+
+        $Data = json_decode($response, true);
+        $Data['name'] = $name;
+        $tempData = collect([$Data]);
         return view('dashboard', 
         ['title' => 'Dashboard'],
-        ['city' =>  $name,
-        'currentWeather' => $response->json()]);
+        ['weatherLocations' => $tempData]);
+    }
+
+    public function resetLocations($lats, $longs, $names)
+    {
+        
+        $apikey = config('services.openweather.key');
+        for ($x = 0; $x < Couunt($lats); $x++) 
+        {
+            $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$lats[x]}&lon={$longs[x]}&exclude={part}&appid={$apikey}&units=imperial");    
+            $Data = json_decode($response, true);
+            $Data['name'] = $names[x];
+            if (x == 0)
+            {
+                $tempData = collect([$response]);                
+            }
+            else{
+                array_push($tempdata, $response);            
+            }
+        }
+        return view('dashboard', 
+        ['title' => 'Dashboard'],
+        [
+        'weatherLocations' => $tempdata]);
+        
     }
 }
