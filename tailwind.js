@@ -35,5 +35,7 @@ module.exports = {
         }
       },
     },
-    variants: {},
+    variants: {
+     
+    },
   }

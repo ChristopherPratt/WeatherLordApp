@@ -17,7 +17,8 @@ module.exports = {
         },
     },
 
-    variants: {
+    variants: {       
+       
         extend: {
             opacity: ['disabled'],
         },
@@ -35,5 +36,6 @@ module.exports = {
     },
 
 
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [require('@tailwindcss/forms'), require('ps-scrollbar-tailwind')],
+    
 };
