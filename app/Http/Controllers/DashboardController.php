@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\WeatherController;
-
+use Session;
 use Auth;
 use DB;
 use Http;
@@ -27,24 +27,39 @@ class DashboardController extends Controller
 
      
         $currentUserInfo = Location::get($ipList[0]);
-  
+        //$currentUserInfo = Location::get('68.188.228.138');
+        //dd($currentUserInfo);
 
 
-        $city = 'Lexington';
+        $name = 'Lexington, Kentucky';
         if($currentUserInfo != false) 
         {
-            $city = $currentUserInfo->cityName;
+            $name = $currentUserInfo->cityName . ", " . $currentUserInfo->regionName;
         }
-        $response = (new WeatherController)->getWeather( $city);
-
-        $name = $request->input('location');
+        $response = (new WeatherController)->getWeather( $name);
+        
+ 
         //dump($name);
-       
+        //$lat = [$response['lat']];
+        //$long = [$response['lon']];
+        $lat = collect([$response['lat']]);
+        $long = collect([$response['lon']]);
 
+        Session::put('lat', $lat);
+        Session::put('long', $long);
+        Session::put('name', $name);
+
+
+        $Data = json_decode($response, true);
+        $Data['name'] = $name;
+
+        $tempData = collect([$Data]);
+
+        //dd($tempData);
         return view('dashboard', 
         ['title' => 'Dashboard'],
-        ['city' =>  $city,
-        'currentWeather' => $response->json()]);
+        [
+        'weatherLocations' => $tempData]);
        
     }
     
@@ -63,5 +78,21 @@ class DashboardController extends Controller
     public function getLocations(Request $req)
     {
         dd($req->input());
+    }
+
+    public function removeLocation($req)
+    {
+        $index = $req->input()['remove'];
+        $lat = Session::get('lat');
+        $long = Session::get('long');
+        $name = Session::get('name');
+        array_splice($lat, $index,1);
+        array_splice($long, $index,1);
+        array_splice($name, $index,1);
+        Session::put('lat', $lat);        
+        Session::put('long', $long);
+        Session::put('name', $name);
+       
+
     }
 }
