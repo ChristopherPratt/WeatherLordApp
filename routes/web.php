@@ -29,9 +29,11 @@ Route::get('/logout', [LoginController::class, 'logout']);
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/getUserName', [DashboardController::class, 'getUserName']);
 Route::get('/removeLocation', [DashboardController::class, 'removeLocation']);
+Route::get('/addLocation', [DashboardController::class, 'addLocation']);
+
 
 Route::get('/getCurrentWeather', [WeatherController::class, 'getCurrentWeather']);
-Route::get('/getLocations', [WeatherController::class, 'getLocations']);
+//Route::get('/getLocations', [WeatherController::class, 'getLocations']);
 
 
 

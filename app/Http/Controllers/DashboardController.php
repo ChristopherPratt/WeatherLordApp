@@ -36,7 +36,7 @@ class DashboardController extends Controller
         {
             $name = $currentUserInfo->cityName . ", " . $currentUserInfo->regionName;
         }
-        $response = (new WeatherController)->getWeather( $name);
+        $response = (new WeatherController)->getWeatherFirst( $name);
         
  
         //dump($name);
@@ -75,21 +75,46 @@ class DashboardController extends Controller
     }
 
     
-    public function getLocations(Request $req)
+    public function AddLocation(Request $req)
     {
-        //dd($req->input());
+        $lat = Session::get('lat');  
+        $long = Session::get('long');
+        $name = Session::get('name');
+
+        $tempData = (new WeatherController)->resetLocations($lat,$long,$name);
+
+        $location = $req->input()['location'];
+        $newData = (new WeatherController)->getWeather($location);
+
+        array_push($tempData,$newData);
+        //dd($newData);
+        $newlat = $newData['lat'];
+        $newlong = $newData['lon'];
+        $newName = $newData['name'];
+        array_push($lat, $newlat );            
+        array_push($long, $newlong );
+        array_push($name, $newName );
+        //dd($lat);
+        Session::put('lat', $lat);        
+        Session::put('long', $long);
+        Session::put('name', $name);
+
+        //dd($tempData);
+        return view('dashboard', 
+        ['title' => 'Dashboard'],
+        ['weatherLocations' => $tempData]);
+
+
     }
 
     public function removeLocation(Request $req)
     {
+
         //dd($req);
         //dd($index = $req->input()['remove']);
         $index = $req->input()['remove'];
-        $lat = Session::get('lat');
-        //dd($lat->all());
+        $lat = Session::get('lat');  
         $long = Session::get('long');
-        //$name = Session::get('name');
-        //dd($name);
         $name = Session::get('name');
         array_splice($lat, $index,1);
         array_splice($long, $index,1);

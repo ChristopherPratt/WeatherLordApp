@@ -6,7 +6,7 @@
 @section('content')
 <article class="bg-gradient-to-t from-gray-500 to-gray-800 min-h-screen  ">
         
-        <form action="/getLocations" method="GET">
+        <form action="/addLocation" method="GET">
                 @csrf
                 <section class="flex  items-center justify-center w-full mx-auto pt-24">                
                         <label for="location" class="text-m whitespace-nowrap ml-3">New Location:</label>
