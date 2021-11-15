@@ -3,16 +3,15 @@
 
 @section('content')
 <article class="bg-gradient-to-t from-gray-500 to-gray-800 min-h-screen  ">
-
-        <section class="flex ">
-                <header>
-
-                </header>
-                <input type="text">
-                
-        </section>
-
-        <section class="overflow-x-auto pt-32 mx-2 text-center">
+        <form action="/getLocations" method="GET">
+                @csrf
+                <section class="flex  items-center justify-center w-full mx-auto pt-24">                
+                        <label for="location" class="text-m whitespace-nowrap w-1.5ml-3">New Location:</label>
+                        <input type="text" id='location' name="location" placeholder="enter cityy" class="bg-gray-900 min-w-0  w-96  ml-2 mr-2 rounded-lg">         
+                        <button type="submit" class="bg-gray-900  px-2 mr-3 rounded-lg">Find</button> 
+                </section>
+        </form>
+        <section class="overflow-x-auto pt-5 mx-2 text-center">
                 <div class="w-max m-auto bg-gray-900 text-white text-sm rounded-lg  flex ">                  
                         <section class="current-weather flex items-center justify-between pl-4">
                                 <div>

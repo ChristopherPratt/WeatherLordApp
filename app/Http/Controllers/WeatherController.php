@@ -16,8 +16,9 @@ class WeatherController extends Controller
     // }
     public function getCurrentWeather()
     {
-        $apikey = 'd7c03bc351cb38c5cd2d8b660d9945f0';
-        $openMapToken = 'pk.eyJ1IjoiY2hyaXNwcmF0dG10IiwiYSI6ImNrdnpyYXQzYjBwcDEyd3BhazR0NnNpM2gifQ.QuXqD3wXn8aRm2sfuRWxhQ';
+        
+        $apikey = config('services.openweather.key');
+        $openMapToken = config('services.mapbox.token');
         $location = 'Detroit';
         //$response = Http::get("https://api.openweathermap.org/data/2.5/weather?q={$location}&appid={$apikey}&units=imperial");
         $response = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token={$openMapToken}");
@@ -29,13 +30,43 @@ class WeatherController extends Controller
 
     public function getWeather($city)
     {
-        $apikey = 'd7c03bc351cb38c5cd2d8b660d9945f0';
-        $openMapToken = 'pk.eyJ1IjoiY2hyaXNwcmF0dG10IiwiYSI6ImNrdnpyYXQzYjBwcDEyd3BhazR0NnNpM2gifQ.QuXqD3wXn8aRm2sfuRWxhQ';
-
+        $apikey = config('services.openweather.key');
+        $mapbox = config('services.mapbox.token');
         //$loc = Http::get("https://api.openweathermap.org/data/2.5/weather?q={$city}&appid={$apikey}");
-        $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token={$openMapToken}");
-        dump($loc->json());
-        //$response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['coord']['lat']}&lon={$loc['coord']['lon']}&exclude={part}&appid={$apikey}&units=imperial");
-        //return $response;
+        $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$city}.json?limit=5&access_token={$mapbox}");
+        //dump($loc2->json());
+        $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['features'][0]['center'][1]}&lon={$loc['features'][0]['center'][0]}&exclude={part}&appid={$apikey}&units=imperial");
+        return $response;
+    }
+
+    public function getLocations(Request $req)
+    {
+        $mapbox = config('services.mapbox.token');
+        $apikey = config('services.openweather.key');
+        $data = $req->input()['location'];
+        $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$data}.json?limit=5&access_token={$mapbox}");
+        //dd($loc->json());
+        if (Count($loc['features']) == 0)
+        {
+            $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/Lexington.json?limit=5&access_token={$mapbox}");
+        }
+        $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['features'][0]['center'][1]}&lon={$loc['features'][0]['center'][0]}&exclude={part}&appid={$apikey}&units=imperial");
+        $city = explode(",",$loc['features'][0]['place_name']);
+        //dd($loc->json());
+        //dd($response->json());
+        //dd($req->input());
+        //dd($city);
+        if (Count($city) >= 2)
+        {
+            $name = $city[0] . ',' . $city[1];
+        }
+        else{
+            $name = $city[0];
+        }
+        
+        return view('dashboard', 
+        ['title' => 'Dashboard'],
+        ['city' =>  $name,
+        'currentWeather' => $response->json()]);
     }
 }

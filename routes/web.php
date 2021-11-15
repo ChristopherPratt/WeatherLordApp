@@ -17,9 +17,9 @@ use App\Http\Controllers\WeatherController;
 |
 */
 
-Route::redirect('/', '/home');
+Route::redirect('/', '/dashboard');
 
-Route::get('/home', [HomeController::class, 'index']);
+//Route::get('/home', [HomeController::class, 'index']);
 
 Route::get('/about', [AboutController::class, 'index']);
 
@@ -28,8 +28,10 @@ Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/getUserName', [DashboardController::class, 'getUserName']);
+Route::get('/getLocations', [DashboardController::class, 'getLocations']);
 
 Route::get('/getCurrentWeather', [WeatherController::class, 'getCurrentWeather']);
+
 
 
 

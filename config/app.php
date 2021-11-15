@@ -231,6 +231,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Location' => 'Stevebauman\Location\Facades\Location',
+        'Input' => Illuminate\Support\Facades\Input::class,
     ],
 
 ];

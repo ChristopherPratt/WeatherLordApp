@@ -30,4 +30,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'mapbox' => [
+        'token' => env('MAPBOX_TOKEN'),
+    ],
+    
+    'openweather' => [
+        'key' => env('OPEN_WEATHER_MAP_KEY'),
+    ],
+
 ];
