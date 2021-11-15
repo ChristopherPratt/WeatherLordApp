@@ -70,25 +70,27 @@ class WeatherController extends Controller
 
     public function resetLocations($lats, $longs, $names)
     {
-        
+        $tempData = [];
         $apikey = config('services.openweather.key');
-        for ($x = 0; $x < Couunt($lats); $x++) 
+        for ($x = 0; $x < Count($lats); $x++) 
         {
             $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$lats[x]}&lon={$longs[x]}&exclude={part}&appid={$apikey}&units=imperial");    
             $Data = json_decode($response, true);
             $Data['name'] = $names[x];
             if (x == 0)
             {
-                $tempData = collect([$response]);                
+                dd($tempdata);
+                $tempData = [$response];                
             }
             else{
-                array_push($tempdata, $response);            
+                array_push($tempData, $response);            
             }
         }
-        return view('dashboard', 
-        ['title' => 'Dashboard'],
-        [
-        'weatherLocations' => $tempdata]);
+        
+        return $tempData;
+        // return view('dashboard', 
+        // ['title' => 'Dashboard'],
+        // ['weatherLocations' => $tempData]);
         
     }
 }

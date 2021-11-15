@@ -42,24 +42,24 @@ class DashboardController extends Controller
         //dump($name);
         //$lat = [$response['lat']];
         //$long = [$response['lon']];
-        $lat = collect([$response['lat']]);
-        $long = collect([$response['lon']]);
+        $lat = [$response['lat']];
+        $long = [$response['lon']];
+        $myName = [$name];
 
         Session::put('lat', $lat);
         Session::put('long', $long);
-        Session::put('name', $name);
+        Session::put('name', $myName);
 
 
         $Data = json_decode($response, true);
         $Data['name'] = $name;
 
-        $tempData = collect([$Data]);
+        $tempData = [$Data];
 
         //dd($tempData);
         return view('dashboard', 
         ['title' => 'Dashboard'],
-        [
-        'weatherLocations' => $tempData]);
+        ['weatherLocations' => $tempData]);
        
     }
     
@@ -77,14 +77,19 @@ class DashboardController extends Controller
     
     public function getLocations(Request $req)
     {
-        dd($req->input());
+        //dd($req->input());
     }
 
-    public function removeLocation($req)
+    public function removeLocation(Request $req)
     {
+        //dd($req);
+        //dd($index = $req->input()['remove']);
         $index = $req->input()['remove'];
         $lat = Session::get('lat');
+        //dd($lat->all());
         $long = Session::get('long');
+        //$name = Session::get('name');
+        //dd($name);
         $name = Session::get('name');
         array_splice($lat, $index,1);
         array_splice($long, $index,1);
@@ -92,7 +97,11 @@ class DashboardController extends Controller
         Session::put('lat', $lat);        
         Session::put('long', $long);
         Session::put('name', $name);
-       
-
+        
+        $tempData = (new WeatherController)->resetLocations($lat,$long,$name);
+        
+        return view('dashboard', 
+        ['title' => 'Dashboard'],
+        ['weatherLocations' => $tempData]);
     }
 }
