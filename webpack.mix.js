@@ -6,13 +6,18 @@ const mix = require('laravel-mix');
  |--------------------------------------------------------------------------
  |
  | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel applications. By default, we are compiling the CSS
+ | for your Laravel application. By default, we are compiling the Sass
  | file for the application as well as bundling up all the JS files.
  |
  */
 
-mix
-    .js('resources/js/app.js', 'public/js')
+mix.js('resources/js/app.js', 'public/js')
+    .vue()
+    // .sass('resources/sass/app.scss', 'public/css', [
+    //     require('postcss-import'),
+    //     require('tailwindcss'),
+    //     require('autoprefixer')])
+    
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
@@ -25,18 +30,4 @@ mix
         //proxy: 'domain.app',
         //port: 48439,
         //files: ["public/css/*.css", "public/js/*.js", "resources/views/**/*"],
-    })
-    //.sass('resources/sass/app.scss', 'public/css')
-    //.tailwind(); // add this so we can handle the tailwind files
-
-;
-//mix.browserSync('http://localhost:8000');
-
-
-//mix.browserSync({
- //   open: false,
-  //  proxy: "http://localhost:8000",
-   // //proxy: 'domain.app',
-    ////port: 8001,
-    //files: ["public/css/*.css", "public/js/*.js", "resources/views/**/*"],
-//});
+    });

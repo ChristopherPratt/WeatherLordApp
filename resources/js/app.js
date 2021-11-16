@@ -1,7 +1,16 @@
+
+
 require('./bootstrap');
 
-import Alpine from 'alpinejs';
+window.Vue = require('vue').default;
 
-window.Alpine = Alpine;
 
-Alpine.start();
+Vue.component('weather-lord', require('./components/WeatherLordVue.vue').default);
+Vue.component('about', require('./components/about.vue').default);
+Vue.component('dashboard', require('./components/dashboard.vue').default);
+
+
+const app = new Vue({
+    el: '#app',
+    //components: { test }
+});

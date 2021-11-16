@@ -28,7 +28,7 @@ class WeatherController extends Controller
         //return $response;
     }
 
-    public function getWeather($city)
+    public function getWeatherFirst($city)
     {
         $apikey = config('services.openweather.key');
         $mapbox = config('services.mapbox.token');
@@ -36,26 +36,23 @@ class WeatherController extends Controller
         $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$city}.json?limit=5&access_token={$mapbox}");
         //dump($loc2->json());
         $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['features'][0]['center'][1]}&lon={$loc['features'][0]['center'][0]}&exclude={part}&appid={$apikey}&units=imperial");
-        return $response;
+        return $response->json();
     }
 
-    public function getLocations(Request $req)
+    public function getWeather($location)
     {
         $mapbox = config('services.mapbox.token');
         $apikey = config('services.openweather.key');
-        $data = $req->input()['location'];
-        $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$data}.json?limit=5&access_token={$mapbox}");
-        //dd($loc->json());
-        if (Count($loc['features']) == 0)
+        
+        $loc2 = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$location}.json?limit=5&access_token={$mapbox}");
+        //dd($loc2->json());
+        $loc=$loc2->json();
+        if (Count($loc) <=2 || Count($loc['features']) == 0)
         {
-            $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/Lexington.json?limit=5&access_token={$mapbox}");
+            return ["failed"];
         }
         $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['features'][0]['center'][1]}&lon={$loc['features'][0]['center'][0]}&exclude={part}&appid={$apikey}&units=imperial");
         $city = explode(",",$loc['features'][0]['place_name']);
-        //dd($loc->json());
-        //dd($response->json());
-        //dd($req->input());
-        //dd($city);
         if (Count($city) >= 2)
         {
             $name = $city[0] . ',' . $city[1];
@@ -63,10 +60,38 @@ class WeatherController extends Controller
         else{
             $name = $city[0];
         }
+        //dd($response);
+        $Data = json_decode($response, true);
+        //dd($Data);
+        $Data['name'] = $name;
+        $tempData = $Data;
+
+        return $tempData;
+
+    }                                       
+
+    public function resetLocations($lats, $longs, $names)
+    {
+        $tempData = [];
+        $apikey = config('services.openweather.key');
+        for ($x = 0; $x < Count($lats); $x++) 
+        {
+
+            $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$lats[$x]}&lon={$longs[$x]}&exclude={part}&appid={$apikey}&units=imperial");    
+            $newData = json_decode($response, true);
+            $newData['name'] = $names[$x];
+            if ($x == 0)
+            {
+                //dd($tempdata);
+                $tempData = [$newData];                
+            }
+            else{
+                array_push($tempData, $newData);            
+            }
+        }
         
-        return view('dashboard', 
-        ['title' => 'Dashboard'],
-        ['city' =>  $name,
-        'currentWeather' => $response->json()]);
+        return $tempData;
+
+        
     }
 }
