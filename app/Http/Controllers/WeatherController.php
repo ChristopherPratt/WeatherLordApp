@@ -36,7 +36,7 @@ class WeatherController extends Controller
         $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$city}.json?limit=5&access_token={$mapbox}");
         //dump($loc2->json());
         $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['features'][0]['center'][1]}&lon={$loc['features'][0]['center'][0]}&exclude={part}&appid={$apikey}&units=imperial");
-        return $response;
+        return $response->json();
     }
 
     public function getWeather($location)
@@ -44,11 +44,12 @@ class WeatherController extends Controller
         $mapbox = config('services.mapbox.token');
         $apikey = config('services.openweather.key');
         
-        $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$location}.json?limit=5&access_token={$mapbox}");
-        //dd($loc->json());
-        if ($loc['message'] == "Not Found" || Count($loc['features']) == 0)
+        $loc2 = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/{$location}.json?limit=5&access_token={$mapbox}");
+        //dd($loc2->json());
+        $loc=$loc2->json();
+        if (Count($loc) <=2 || Count($loc['features']) == 0)
         {
-            $loc = Http::get("https://api.mapbox.com/geocoding/v5/mapbox.places/Lexington.json?limit=5&access_token={$mapbox}");
+            return ["failed"];
         }
         $response = Http::get("https://api.openweathermap.org/data/2.5/onecall?lat={$loc['features'][0]['center'][1]}&lon={$loc['features'][0]['center'][0]}&exclude={part}&appid={$apikey}&units=imperial");
         $city = explode(",",$loc['features'][0]['place_name']);

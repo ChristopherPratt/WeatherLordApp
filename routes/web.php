@@ -5,8 +5,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\WelcomeController;
 /*
+use App\Http\Controllers\WeatherController;
+
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -18,6 +20,8 @@ use App\Http\Controllers\WeatherController;
 */
 
 Route::redirect('/', '/dashboard');
+
+Route::get('/welcome', [WelcomeController::class, 'index']);
 
 //Route::get('/home', [HomeController::class, 'index']);
 
@@ -46,3 +50,7 @@ Route::get('/getCurrentWeather', [WeatherController::class, 'getCurrentWeather']
 //})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+//Auth::routes();
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

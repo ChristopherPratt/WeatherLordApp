@@ -7,8 +7,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ mix('js/app.js') }}" defer></script>
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}" />
     <title>Weather Lord</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" >
 
 </head>
 <body class="text-white">
@@ -32,7 +33,7 @@
     </main>
 
     <footer>
-        <header class="container bg-gray-700 mx-auto p-4 z-50">
+        <header class="bg-gray-700 mx-auto p-4 z-50">
             <p>&copy; Chris Pratt | Weather Lord</p>
         </header>
     </footer>

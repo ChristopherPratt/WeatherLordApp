@@ -10,16 +10,12 @@
                 @csrf
                 <section class="flex  items-center justify-center w-full mx-auto pt-24">                
                         <label for="location" class="text-m whitespace-nowrap ml-3">New Location:</label>
-                        <input type="text" id='location' name="location" placeholder="Enter City and State" class="bg-gray-900 min-w-0  w-96  ml-2 mr-2 rounded-lg" autofocus>         
+                        <input type="text" id='location' name="location" placeholder="Enter City and State" class="bg-gray-900 min-w-0  w-96  ml-2 mr-2 rounded-lg">         
                         <button type="submit" class="bg-gray-900  px-2 mr-3 rounded-lg">Add</button> 
                 </section>
-                <div class="flex justify-center ">
-                        <label for="message" class="text-red-500 text-base  w-max text-center mt-2"> </label>
-                </div>
-
         </form>
-        @foreach($weatherLocations as $index => $currentWeather)
-                <section class="overflow-x-auto pt-2 mx-2 text-center">
+        @foreach($weatherLocations as $currentWeather)
+                <section class="overflow-x-auto pt-5 mx-2 text-center">
                         <div class="w-max m-auto bg-gray-900 text-white text-sm rounded-lg  flex ">                  
                                 <section class="current-weather flex items-center justify-between pl-4">
                                                 
@@ -28,12 +24,14 @@
                                                         <form action="/removeLocation" method="GET">
                                                                 @csrf
                                                                 <section class="">                                                                
-                                                                        <input type="text" id='remove' name="remove" value={{$index}} class="hidden">         
+                                                                        <input type="text" id='remove' name="remove" value="0" class="hidden">         
                                                                         <button type="submit" class=" ">&#128465;</button> 
                                                                 </section>
                                                         </form>
                                                         <div class=" font-semibold text-center w-full mr-2 ">Current Weather</div>     
                                                 </div>
+                                                
+                                                
                                                 <header class="flex items-center justify-between">
                                                         <header class="">
                                                                 <div class="text-5xl font-semibold ">{{round($currentWeather['current']['temp'])}} &#176;F</div>
@@ -41,19 +39,10 @@
                                                         </header>
                                                         <header class="">
                                                                 <img class="text-center w-40 -my-10" src="http://openweathermap.org/img/wn/{{$currentWeather['current']['weather'][0]['icon']}}@4x.png">                                                        
-                                                                <div class="font-semibold text-center  ">{{$currentWeather['current']['weather'][0]['description']}}</div>
+                                                                <div class="font-semibold text-center ">{{$currentWeather['current']['weather'][0]['description']}}</div>
                                                         </header>
                                                 </header>
-                                                <div class="flex">
-                                                        <form action="/saveLocation" method="GET">
-                                                                        @csrf
-                                                                        <section class="">                                                                
-                                                                                <input type="text" id='save' name="save" value={{$index++}} class="hidden">         
-                                                                                <button type="submit" class=" ">&#128190;</button> 
-                                                                        </section>
-                                                                </form>
-                                                        <div class="text-gray-400 text-center w-full mr-2">{{$currentWeather['name']}}</div> 
-                                                </div>
+                                                <div class="text-gray-400 text-center">{{$currentWeather['name']}}</div> 
                                         </div>
                                 </section>
                                 @foreach ($currentWeather['daily'] as $weather)
