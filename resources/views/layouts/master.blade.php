@@ -14,17 +14,16 @@
 </head>
 <body class="text-white">
     <header class="fixed  top-0 left-0 right-0 z-50">
-        <div class="mx-auto flex justify-between p-4 h-16">
+        <div class="mx-auto flex justify-between p-3 bg-gray-800">
             <a href="/" class="text-xl font-black hover:text-green-500 transition whitespace-nowrap">Weather Lord</a>
             <nav class="-mx-2 whitespace-nowrap">               
-                @if (Auth::id())
+                @if (Auth::check())
                     <a href="/dashboard" class="text-lg mr-1 text-white hover:text-green-500 transition">{{Auth::user()->name}}</a>
                     <a href="/logout" class="text-lg mr-1 text-white hover:text-green-500 transition">Logout</a>
                 @else
                     <a href="/login" class="text-lg mr-1 text-white hover:text-green-500 transition">Login</a>
                 @endif                
-                <a href="/about" class="text-lg mr-1 text-white hover:text-green-500 transition">About</a>                
-
+                <a href="/about" class="text-lg mr-1 text-white hover:text-green-500 transition">About</a>   
             </nav>
         </div>
     </header>

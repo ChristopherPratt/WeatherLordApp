@@ -16,6 +16,65 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $error = '';
+        if (Auth::check())
+        {
+            $tempData = $this->getSavedLocationsDB();
+        }
+        else{
+            $tempData = $this->guest();
+        }
+        //dd($tempData);
+        if (!$this->checkForErrors($tempData))
+        {  
+            //dd($tempData[0]);
+            $error = $tempData['error'];
+            $tempData = [];
+        }
+        unset($tempData['ErrFlag']); 
+        $Weather = [];
+        array_push($Weather,$tempData);
+        array_push($Weather,$error);
+        
+        //dd($Weather);
+        return view('dashboard', 
+        ['title' => 'Dashboard'],
+        ['weatherLocations' => $Weather]);
+    }
+
+    public function getSavedLocationsDB()
+    {
+        $lat = [];
+        $long = [];
+        $name=[];
+        $response = DB::select("select * from user_locations where user_id ='".Auth::id()."'");
+        foreach($response as $location)
+        {
+            //dd($location->NAME);
+            array_push($lat, $location->LAT );            
+            array_push($long, $location->LONG );
+            array_push($name, $location->NAME);
+            
+        }
+        Session::put('lat', $lat);
+        Session::put('long', $long);
+        Session::put('name', $name);
+
+       // dd($lat);
+
+        $tempData = (new WeatherController)->resetLocations($lat,$long,$name);
+        
+        
+
+
+        //dd($tempData);
+        return $tempData;
+    }
+
+
+
+    public function guest()
+    {
         $error = "";
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -25,12 +84,8 @@ class DashboardController extends Controller
             $ip = $_SERVER['REMOTE_ADDR'];
         }
         $ipList = explode(",", $ip);
-
-     
-        $currentUserInfo = Location::get($ipList[0]);
         //$currentUserInfo = Location::get('68.188.228.138');
-        //dd($currentUserInfo);
-
+        $currentUserInfo = Location::get($ipList[0]);
 
         $name = 'Lexington, Kentucky';
         if($currentUserInfo != false) 
@@ -38,52 +93,27 @@ class DashboardController extends Controller
             $name = $currentUserInfo->cityName . ", " . $currentUserInfo->regionName;
         }
         $response = (new WeatherController)->getWeatherFirst( $name);
-        
+       
+        if (!$this->checkForErrors($response))
+        {  
+           return $response;
+        }
         //dd($response);
-        if (Count($response) != 1)
-        {
-                //dump($name);
-            //$lat = [$response['lat']];
-            //$long = [$response['lon']];
-            $lat = [$response['lat']];
-            $long = [$response['lon']];
-            $myName = [$name];
+        $lat = [$response['lat']];
+        $long = [$response['lon']];
+        $myName = [$name];
 
-            Session::put('lat', $lat);
-            Session::put('long', $long);
-            Session::put('name', $myName);
+        Session::put('lat', $lat);
+        Session::put('long', $long);
+        Session::put('name', $myName);
+
+        $response['name'] = $name;
+        $tempData = [$response];
+        $tempData['ErrFlag'] = false;
 
 
-            
-            $response['name'] = $name;
-
-            $tempData = [$response];
-        }
-        else
-        {
-            $tempData = [];
-            $error = $response[0];
-        }
- 
-       
-        //$tempData['error'] = $error;
-        //d($tempData);
-        return view('dashboard', 
-        ['title' => 'Dashboard'],
-        ['weatherLocations' => $tempData]);
-       
-    }
-    
- 
-    public static function getUserName()
-    {
-       
-        $id = Auth::id();
-        if($id == "") {return "";}
-        $results = DB::select(DB::raw('select * from users where id = ' . $id ));
-        //echo(implode(" ",$results));
-        return $results[0]->name;
-    }
+        return $tempData;
+    }    
 
     
     public function AddLocation(Request $req)
@@ -94,39 +124,57 @@ class DashboardController extends Controller
         $name = Session::get('name');
 
         $tempData = (new WeatherController)->resetLocations($lat,$long,$name);
-        //dd($tempData);
+        if (!$this->checkForErrors($tempData))
+        {
+            
+            $error = $tempData['error'];
+            $tempData = [];
+
+            $Weather = [];
+            array_push($Weather,$tempData);
+            array_push($Weather,$error);
+            //dd($Weather);
+            return view('dashboard', 
+            ['title' => 'Dashboard'],
+            ['weatherLocations' => $Weather]);
+        }
+        unset($tempData['ErrFlag']); 
+
+
         $location = $req->input()['location'];
         $newData = (new WeatherController)->getWeather($location);
         
         if ($this->checkForErrors($newData))
-        {
-            //dd(Count($tempData));
-            
+        {            
             if ($this->checkForDuplicates($tempData,$newData))
             {
+                unset($newData['ErrFlag']); 
                 array_push($tempData,$newData);
-                //dd($newData);
-                $newlat = $newData['lat'];
-                $newlong = $newData['lon'];
+                $newLat = $newData['lat'];
+                $newLong = $newData['lon'];
                 $newName = $newData['name'];
-                array_push($lat, $newlat );            
-                array_push($long, $newlong );
+                array_push($lat, $newLat );            
+                array_push($long, $newLong );
                 array_push($name, $newName );
-                //dd($lat);
                 Session::put('lat', $lat);        
                 Session::put('long', $long);
-                Session::put('name', $name);
-            }
-            
+                Session::put('name', $name);  
+                //dd($tempData);
+            }  
+            else{
+                $error = "Let's try not to duplicate weather locations... okay?";
+            }          
         }
-        else{
-            $error = $tempData[0];
+        else{            
+            $error = $newData['error'];            
         }
-        //$tempData['error'] = $error;
-        //dd($tempData);
+        $Weather = [];
+        array_push($Weather,$tempData);
+        array_push($Weather,$error);
+        //dd($Weather);
         return view('dashboard', 
         ['title' => 'Dashboard'],
-        ['weatherLocations' => $tempData]);
+        ['weatherLocations' => $Weather]);
 
 
     }
@@ -134,12 +182,16 @@ class DashboardController extends Controller
     public function removeLocation(Request $req)
     {
         $error = "";
-        //dd($req);
-        //dd($index = $req->input()['remove']);
         $index = $req->input()['remove'];
         $lat = Session::get('lat');  
         $long = Session::get('long');
         $name = Session::get('name');
+
+        if (Auth::check())
+        {
+            DB::select("delete from user_locations where name = '".$name[$index]."' AND user_id ='".Auth::id()."'");            
+        }
+
         array_splice($lat, $index,1);
         array_splice($long, $index,1);
         array_splice($name, $index,1);
@@ -148,39 +200,76 @@ class DashboardController extends Controller
         Session::put('name', $name);
         
         $tempData = (new WeatherController)->resetLocations($lat,$long,$name);
-        if (Count($tempData) == 1)
-        {
-            $error = $tempData[0];
-        }
-        //$tempData['error'] = $error;
 
+        if (!$this->checkForErrors($tempData))
+        {  
+            $error = $tempData['error'];
+            $tempData = [];
+        }
+        unset($tempData['ErrFlag']);   
+        $Weather = [];
+        array_push($Weather,$tempData);
+        array_push($Weather,$error);
 
 
         return view('dashboard', 
         ['title' => 'Dashboard'],
-        ['weatherLocations' => $tempData]);
+        ['weatherLocations' => $Weather]);
     }
+
+    public function saveLocation(Request $req)
+    {
+        $error = '';
+        $index = $req->input()['save'];
+        $lat = Session::get('lat');  
+        $long = Session::get('long');
+        $name = Session::get('name');
+        
+        if (Auth::check())
+        {            
+            if($this->checkForDBduplicates("name",$name[$index]))
+            {
+                DB::select("INSERT INTO USER_LOCATIONS ('NAME', 'LAT', 'LONG', 'USER_ID') VALUES(?, ?, ?, ?)",[$name[$index], $lat[$index], $long[$index], Auth::id()] );
+            }
+        }
+        $tempData = (new WeatherController)->resetLocations($lat,$long,$name);
+
+        if (!$this->checkForErrors($tempData))
+        {  
+            $error = $tempData['error'];
+            $tempData = [];
+        }
+        unset($tempData['ErrFlag']); 
+        $Weather = [];
+        array_push($Weather,$tempData);
+        array_push($Weather,$error);
+        //dd($Weather);
+        return view('dashboard', 
+        ['title' => 'Dashboard'],
+        ['weatherLocations' => $Weather]);
+    }
+
 
     public function checkForDuplicates($old, $new)
     {
-        if (Count($old)==0) return true;
-        
-        $lastName = $old[Count($old)-1]['name'];
-        if (strcmp($lastName,$new['name']) == 0) 
+        foreach($old as $loc)
         {
-            
-            return false;
+            if (strcmp($loc['name'],$new['name']) == 0) return false;
         }
-        else 
-        {
-            //dd($lastName);
-            return true;
-        }
+        return true;
+    }
+
+    public function checkForDBduplicates($key, $value)
+    {
+        $response = DB::select("select * from user_locations where ".$key." = '".$value."' AND user_id ='".Auth::id()."'");
+        if (Count($response)>0) return false;
+        else return true;
     }
 
     public function checkForErrors($new)
     {
-        if (Count($new)>1) return true;
+        //dd($new);
+        if (!$new['ErrFlag']) return true;
         else return false;
     }
 }

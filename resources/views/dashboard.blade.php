@@ -8,18 +8,19 @@
         
         <form action="/addLocation" method="GET">
                 @csrf
-                <section class="flex  items-center justify-center w-full mx-auto pt-24">                
-                        <label for="location" class="text-m whitespace-nowrap ml-3">New Location:</label>
-                        <input type="text" id='location' name="location" placeholder="Enter City and State" class="bg-gray-900 min-w-0  w-96  ml-2 mr-2 rounded-lg" autofocus>         
-                        <button type="submit" class="bg-gray-900  px-2 mr-3 rounded-lg">Add</button> 
+                <section class="flex items-stretch justify-center pt-24 ">    
+                        <div class="min-w-0  w-44"></div>            
+                        <label for="location" class="text-m whitespace-nowrap ml-2 mt-2 ">New Location:</label>
+                        <input type="text" id='location' name="location" placeholder="Enter City and State" class="self-center min-w-max  bg-gray-900   w-96  ml-2 mr-2 rounded-lg" autofocus>         
+                        <button type="submit" class="bg-gray-900   p-2 mr-2 rounded-lg">Add</button> 
+                        <div class="min-w-0  w-60"></div>                        
                 </section>
-                <div class="flex justify-center ">
-                        <label for="message" class="text-red-500 text-base  w-max text-center mt-2"> </label>
+                <div class="flex justify-center my-3">
+                        <label for="message" class="text-red-500 text-base  w-max text-center ">{{$weatherLocations[1]}} </label>
                 </div>
-
         </form>
-        @foreach($weatherLocations as $index => $currentWeather)
-                <section class="overflow-x-auto pt-2 mx-2 text-center">
+        @foreach($weatherLocations[0] as $index => $currentWeather)
+                <section class="overflow-x-auto pb-2 mx-2 text-center">
                         <div class="w-max m-auto bg-gray-900 text-white text-sm rounded-lg  flex ">                  
                                 <section class="current-weather flex items-center justify-between pl-4">
                                                 

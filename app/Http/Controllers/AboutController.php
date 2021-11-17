@@ -9,10 +9,6 @@ class AboutController extends Controller
 {
     public function index()
     {
-        $response = (new WeatherController)->getWeather('Detroit');
-
-        //dump($response->json());
-
         return view('about', ['title' => 'About Page']);
     }
 }
