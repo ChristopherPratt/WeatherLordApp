@@ -2,15 +2,15 @@
 
 @section('content')
 <section class="">  
-    <div class="container text-center">
+    <div class="text-center ">
         <x-guest-layout>
-            <x-auth-card>
+            <x-auth-card class="">
                 <x-slot name="logo">
                     
                 </x-slot>
 
                 <!-- Session Status -->
-                <x-auth-session-status class="mb-4" :status="session('status')" />
+                <x-auth-session-status class="mb-4 " :status="session('status')" />
 
                 <!-- Validation Errors -->
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />

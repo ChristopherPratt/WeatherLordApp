@@ -6,8 +6,9 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WelcomeController;
-/*
 use App\Http\Controllers\WeatherController;
+/*
+
 
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,6 +35,7 @@ Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/getUserName', [DashboardController::class, 'getUserName']);
 Route::get('/removeLocation', [DashboardController::class, 'removeLocation']);
 Route::get('/addLocation', [DashboardController::class, 'addLocation']);
+Route::get('/saveLocation', [DashboardController::class, 'saveLocation']);
 
 
 Route::get('/getCurrentWeather', [WeatherController::class, 'getCurrentWeather']);
