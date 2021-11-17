@@ -160,7 +160,10 @@ class DashboardController extends Controller
                 Session::put('long', $long);
                 Session::put('name', $name);  
                 //dd($tempData);
-            }            
+            }  
+            else{
+                $error = "Let's try not to duplicate weather locations... okay?";
+            }          
         }
         else{            
             $error = $newData['error'];            
@@ -249,17 +252,11 @@ class DashboardController extends Controller
 
     public function checkForDuplicates($old, $new)
     {
-        if (Count($old)==0) return true;
-        //dd($old);
-        $lastName = $old[Count($old)-2]['name'];
-        if (strcmp($lastName,$new['name']) == 0) 
-        {            
-            return false;
-        }
-        else 
+        foreach($old as $loc)
         {
-            return true;
+            if (strcmp($loc['name'],$new['name']) == 0) return false;
         }
+        return true;
     }
 
     public function checkForDBduplicates($key, $value)

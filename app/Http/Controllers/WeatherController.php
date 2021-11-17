@@ -101,7 +101,7 @@ class WeatherController extends Controller
         
         //dd($data);
         if ($data == null) $error = "It seems like there is a connection failure.";          
-        elseif (Count($data) < 8) $error = $data['message'];
+        elseif (Count($data) < 6) $error = $data['message'];
         if ($error != '') 
         {
             $ERflag = true;
