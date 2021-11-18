@@ -1,6 +1,3 @@
-@inject('dashboard', 'App\Http\Controllers\DashboardController')
-@inject('weather', 'App\Http\Controllers\WeatherController')
-
 @extends('layouts.master')
 
 @section('content')
