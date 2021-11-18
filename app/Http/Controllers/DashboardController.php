@@ -52,8 +52,8 @@ class DashboardController extends Controller
         foreach($response as $location)
         {
             //dd($location->NAME);
-            array_push($lat, $location->LAT );            
-            array_push($long, $location->LONG );
+            array_push($lat, $location->LATITUDE );            
+            array_push($long, $location->LONGITUDE );
             array_push($name, $location->NAME);
             
         }
@@ -230,7 +230,7 @@ class DashboardController extends Controller
         {            
             if($this->checkForDBduplicates("name",$name[$index]))
             {
-                DB::select("INSERT INTO USER_LOCATIONS ('NAME', 'LAT', 'LONG', 'USER_ID') VALUES(?, ?, ?, ?)",[$name[$index], $lat[$index], $long[$index], Auth::id()] );
+                DB::select("INSERT INTO user_locations(NAME, LATITUDE, LONGITUDE, USER_ID) VALUES(?, ?, ?, ?)",[$name[$index], $lat[$index], $long[$index], Auth::id()] );
                 $error = 'Location saved.';
             }
             else{
