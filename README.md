@@ -7,6 +7,53 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+### WeatherLord Setup ###
+
+### getting the source code ###
+download zip file from repo
+move zip file into /home directory
+unzip to folder named "WeatherLordApp"
+
+### environment setup linux commands from /home/WeatherLordApp/ ###
+sudo add-apt-repository ppa:ondrej/php
+sudo apt update
+sudo apt install php8.0 libapache2-mod-php8.0 
+sudo apt-get install php php-bcmath php-common php-json php-mbstring php-mysql php-xml php-zip curl php-curl openssl
+composer global require laravel/installer
+composer update
+sudo apt install mysql-client-core-8.0
+sudo apt-get install mysql-server
+sudo mysqld
+sudo mysql_secure_installation
+
+### MYSQL database setup ###
+Answer the following questions accordingly:
+	VALIDATE PASSWORD COMPONENT: N
+	set new root password: mypass (or anything you want, just don't forget it)
+	REMOVE ANONYMOUS USERS: Y
+	DISALLOW ROOT LOGIN REMOTELY: N
+	REMOVE TEST DATABASE: Y
+	RELOAD PRIVILEGE TABLES: Y
+sudo mysql -u root -p 
+in the mysql prompt type: 
+	create database weatherdb;
+	CREATE USER weather@localhost IDENTIFIED BY 'passpass';
+	grant all privileges on *.* to weather@localhost with grant option;
+
+### the .env file ###
+copy the .env.example file and rename the copy as .env
+the following API keys must be obtained and placed in the .env near the bottom of the file.
+the OPEN_WEATHER_MAP_KEY= value can be obtained by creating a free account at https://openweathermap.org/
+the MAPBOX_TOKEN= value can be obtained by creating a free account at https://www.mapbox.com/
+
+### final website setup linux commands from /home/WeatherLordApp/ ###
+php artisan key:generate
+php artisan migrate
+php artisan serve
+
+Now open a browser and in localhost:8000 will be the website WeatherLord!!!
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
