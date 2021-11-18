@@ -44,6 +44,7 @@ class DashboardController extends Controller
 
     public function getSavedLocationsDB()
     {
+        
         $lat = [];
         $long = [];
         $name=[];
@@ -230,7 +231,15 @@ class DashboardController extends Controller
             if($this->checkForDBduplicates("name",$name[$index]))
             {
                 DB::select("INSERT INTO USER_LOCATIONS ('NAME', 'LAT', 'LONG', 'USER_ID') VALUES(?, ?, ?, ?)",[$name[$index], $lat[$index], $long[$index], Auth::id()] );
+                $error = 'Location saved.';
             }
+            else{
+                $error = 'Location is already saved.';
+            }
+        }
+        else
+        {
+            $error = 'Locations cannot be saved unless you are logged in.';
         }
         $tempData = (new WeatherController)->resetLocations($lat,$long,$name);
 
