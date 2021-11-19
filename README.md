@@ -54,6 +54,44 @@ php artisan serve
 Now open a browser and in localhost:8000 will be the website WeatherLord!!!
 
 
+### Features ###
+Upon a users first visit they will have their local weather displayed on their screen.
+	To do this I used the stevebauman/location package to collect their latitude and longitude based on their ip address. Then I used the openweathermap api to get the weather information for that location and display it automatically upon form load.
+User's can search for weather from any location in the world - and can see mulitple locations on their screen.
+	I chose to integrate mapbox geocoding to take user input to search for locations and get their latitude and longitude.	
+	I used that information to collect current and forecasted weather information from openweathermap's "onecall" api.
+	
+In order to save locations a logged in used must click on the floppy disk save icon in the bottom left of the weather location row to save. Locations he hasn't saved will be lost after logout.
+	I used Laravel's built in AUTH login and registration protocols to handle all of this.	
+a user can delete a weather row from their account by simply pressing the trash can icon in the top left.
+
+### Technology Used ###
+Ubuntu 20.04
+    The best environment to develop and deploy websites with.
+Laravel Framework 8.0
+	I used The Laravel framework with php not because it best showcased my skills. This was the first website I have built using laravel and php. My other three websites I have made were all in ASP.net. However, that didn't seem to be impressive enough.
+mysql 2.7
+	I chose mysql for my database since it integrated so well with Laravel Forge databases.
+Mabbox API
+	mapbox was free to use and since it allowed 50,000 calls a day,  I decided that reaching that threshold would be unlikely.
+Openweathermap API
+	compared to other weather api's openweathermap had the most generous policy for free users and their "onecall" provided a TON of information if you could get them the latitude and longitude.
+stevebauman/location package
+	An awesome free tool which uses an IP address to get a relatively accurate location.
+
+## Development Environment ###
+Ubuntu 20.04 on WSL 2
+	This environment made the most sense and was recommended on the Laravel 8.0 documentation. Using this I didn't need to dual boot my computer with Ubuntu.
+VS Code
+	I have never used this editor before, but since it integrates so well into WSL, Ubuntu, and GIT and even had database tools, it worked great.
+GitHub
+
+### Deployment ###
+Control Panel: Laravel Forge
+Remote Server: Digital Ocean Droplet
+	This deployment method was fast and professional. I appreciate all the tools which help a user deploy and keep a website updated.
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
